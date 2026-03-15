@@ -1,0 +1,89 @@
+-- HGB VN HUB (Kaitun)
+-- No Bounty Version
+repeat wait() until game:IsLoaded()
+
+local Player = game.Players.LocalPlayer
+local StartTime = tick()
+
+-- Anti AFK
+local vu = game:GetService("VirtualUser")
+Player.Idled:Connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+-- GUI
+local gui = Instance.new("ScreenGui",game.CoreGui)
+gui.Name = "HGB_HUB"
+
+local frame = Instance.new("Frame",gui)
+frame.Size = UDim2.new(0,230,0,150)
+frame.Position = UDim2.new(0,20,0,200)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+
+local title = Instance.new("TextLabel",frame)
+title.Size = UDim2.new(1,0,0,25)
+title.Text = "HGB VN HUB"
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundTransparency = 1
+
+local info = Instance.new("TextLabel",frame)
+info.Position = UDim2.new(0,0,0,30)
+info.Size = UDim2.new(1,0,0,90)
+info.TextColor3 = Color3.new(1,1,1)
+info.BackgroundTransparency = 1
+info.TextYAlignment = Enum.TextYAlignment.Top
+
+-- Update info
+spawn(function()
+    while wait(1) do
+        pcall(function()
+            local data = Player.Data
+            local time = math.floor(tick() - StartTime)
+            local h = math.floor(time/3600)
+            local m = math.floor((time%3600)/60)
+
+            info.Text =
+            "Level: "..data.Level.Value..
+            "\nBeli: "..data.Beli.Value..
+            "\nFragments: "..data.Fragments.Value..
+            "\nAFK Time: "..h.."h "..m.."m"
+        end)
+    end
+end)
+
+-- Auto Farm
+spawn(function()
+    while wait() do
+        pcall(function()
+            for _,enemy in pairs(workspace.Enemies:GetChildren()) do
+                if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                    repeat
+                        Player.Character.HumanoidRootPart.CFrame =
+                        enemy.HumanoidRootPart.CFrame * CFrame.new(0,10,0)
+
+                        game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0))
+                        game:GetService("VirtualUser"):Button1Up(Vector2.new(0,0))
+
+                        wait()
+                    until enemy.Humanoid.Health <= 0
+                end
+            end
+        end)
+    end
+end)
+
+-- Auto Chest
+spawn(function()
+    while wait(5) do
+        pcall(function()
+            for _,chest in pairs(workspace:GetDescendants()) do
+                if chest.Name == "Chest" then
+                    Player.Character.HumanoidRootPart.CFrame = chest.CFrame
+                    wait(1)
+                end
+            end
+        end)
+    end
+end)
