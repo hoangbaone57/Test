@@ -1,0 +1,73 @@
+-- HGB Kaitun Hub
+-- By: H.BAOCAYTHUE
+
+local player = game.Players.LocalPlayer
+local startTime = tick()
+
+-- GUI
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.Name = "HGB_Kaitun"
+
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0,220,0,120)
+Frame.Position = UDim2.new(0,20,0,200)
+Frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Frame.BorderSizePixel = 0
+
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1,0,0,25)
+Title.Text = "HGB Kaitun Hub"
+Title.TextColor3 = Color3.new(1,1,1)
+Title.BackgroundTransparency = 1
+
+local BeliText = Instance.new("TextLabel", Frame)
+BeliText.Position = UDim2.new(0,0,0,30)
+BeliText.Size = UDim2.new(1,0,0,20)
+BeliText.TextColor3 = Color3.new(1,1,1)
+BeliText.BackgroundTransparency = 1
+
+local FragText = Instance.new("TextLabel", Frame)
+FragText.Position = UDim2.new(0,0,0,50)
+FragText.Size = UDim2.new(1,0,0,20)
+FragText.TextColor3 = Color3.new(1,1,1)
+FragText.BackgroundTransparency = 1
+
+local TimeText = Instance.new("TextLabel", Frame)
+TimeText.Position = UDim2.new(0,0,0,70)
+TimeText.Size = UDim2.new(1,0,0,20)
+TimeText.TextColor3 = Color3.new(1,1,1)
+TimeText.BackgroundTransparency = 1
+
+-- Update Info
+spawn(function()
+    while wait(1) do
+        local beli = player.Data.Beli.Value
+        local frag = player.Data.Fragments.Value
+        local time = math.floor((tick() - startTime) / 3600)
+
+        BeliText.Text = "Beli: "..beli
+        FragText.Text = "Fragments: "..frag
+        TimeText.Text = "Hours AFK: "..time.."h"
+    end
+end)
+
+-- Auto Kaitun Farm
+spawn(function()
+    while wait() do
+        pcall(function()
+            for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
+                    repeat
+                        player.Character.HumanoidRootPart.CFrame =
+                            v.HumanoidRootPart.CFrame * CFrame.new(0,10,0)
+
+                        game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0))
+                        game:GetService("VirtualUser"):Button1Up(Vector2.new(0,0))
+
+                        wait()
+                    until v.Humanoid.Health <= 0
+                end
+            end
+        end)
+    end
+end)
