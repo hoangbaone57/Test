@@ -1,0 +1,55 @@
+repeat wait() until game:IsLoaded()
+
+local Player = game.Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local StartTime = tick()
+
+-- AUTO CODE
+spawn(function()
+pcall(function()
+local codes = {
+"SUB2GAMERROBOT_EXP1",
+"SUB2GAMERROBOT_RESET1",
+"SUB2OFFICIALNOOBIE",
+"AXIORE",
+"TANTAIGAMING",
+"STRAWHATMAINE",
+"BLUXXY",
+"THEGREATACE"
+}
+
+for _,code in pairs(codes) do
+game:GetService("ReplicatedStorage").Remotes.Redeem:InvokeServer(code)
+wait(1)
+end
+end)
+end)
+
+-- XÓA HIỆU ỨNG
+spawn(function()
+while wait() do
+for _,v in pairs(workspace:GetDescendants()) do
+if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+v:Destroy()
+end
+end
+end
+end)
+
+-- GUI GIỮA MÀN HÌNH
+local gui = Instance.new("ScreenGui",game.CoreGui)
+local text = Instance.new("TextLabel",gui)
+
+text.Size = UDim2.new(0,400,0,120)
+text.Position = UDim2.new(0.5,-200,0.45,-60)
+text.BackgroundTransparency = 1
+text.TextScaled = true
+text.TextColor3 = Color3.new(1,1,1)
+text.Font = Enum.Font.GothamBold
+text.TextStrokeTransparency = 0
+
+spawn(function()
+while wait(1) do
+pcall(function()
+
+local data =
