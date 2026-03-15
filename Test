@@ -1,56 +1,29 @@
 pcall(function()
-    if game.CoreGui:FindFirstChild("WindUI") then
-        game.CoreGui.WindUI:Destroy()
+    if game.CoreGui:FindFirstChild("HGBHub") then
+        game.CoreGui.HGBHub:Destroy()
     end
 end)
 
-local WindUI = loadstring(game:HttpGet(
-"https://raw.githubusercontent.com/teoscrvn/T-ng-h-p-/main/Script%20test%20(1).txt"
-))()
-
-if not WindUI then
-    warn("Không load được WindUI")
-    return
-end
-
-local Window = WindUI:CreateWindow({
-    Title = "HGB vn Hub",
-    Size = UDim2.fromOffset(580,340),
-    Theme = "Dark",
-    Transparent = true
-})
-
-Window:EditOpenButton({
-    Title = "HGB vn Hub 🇻🇳",
-    Icon = "monitor",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 2,
-    Color = ColorSequence.new(
-        Color3.fromRGB(255,15,123),
-        Color3.fromRGB(248,155,41)
-    ),
-    Draggable = true
-})
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/uwuware"))()
+local Window = Library:CreateWindow("HGB vn Hub")
 
 -- Tabs
-local Tabs = {
-Fram = Window:Tab({Title="⚔ Fram"}),
-Kaitun = Window:Tab({Title="Kaitun"}),
-PvP = Window:Tab({Title="☠️ PvP"}),
-Other = Window:Tab({Title="⭐ Other"})
-}
+local Fram = Window:AddFolder("⚔ Fram")
+local Kaitun = Window:AddFolder("Kaitun")
+local PvP = Window:AddFolder("☠️ PvP")
+local Other = Window:AddFolder("⭐ Other")
 
 -- Fram
-Tabs.Fram:Button({
-Title="⚡ Quantum",
-Callback=function()
+Fram:AddButton({
+text = "Quantum",
+callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
 end
 })
 
-Tabs.Fram:Button({
-Title="🚀 Xete V4",
-Callback=function()
+Fram:AddButton({
+text = "Xete V4",
+callback = function()
 getgenv().Version = "V4"
 getgenv().Team = "Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()
@@ -58,117 +31,43 @@ end
 })
 
 -- Kaitun
-Tabs.Kaitun:Button({
-Title="Kaitun Level",
-Callback=function()
+Kaitun:AddButton({
+text = "Kaitun Level",
+callback = function()
 getgenv().Config = {
-    Team = "Pirates",
-    FarmConfig = {
-        ["Out game when done all"] = true,
-        ["Bypass Teleport"] = true,
-        ["Double Quest(RISK)"] = true
-    },
-    Items = {
-        ["Saber"] = true,
-        ["Pole (1st form)"] = true,
-        ["Skull Guitar"] = true,
-        ["Cursed Dual Katana"] = true,
-        ["Godhuman"] = true
-    },
-    Webhook = {
-        ["Enabled"] = false,
-        ["Url"] = ""
-    }
+    Team = "Pirates"
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/d6c7959dcc94cd24467080d82a56dcf9.lua"))()
 end
 })
 
-Tabs.Kaitun:Button({
-Title="Find Fruits",
-Callback=function()
-getgenv().Config = {
-    Team = "Pirates",
-    Settings = {
-        BlacklistFruits = {"Rocket Fruit","Blade Fruit","Smoke Fruit"},
-        WebhookStoreFruit = {
-            Enabled = true,
-            Url = ""
-        }
-    }
-}
+Kaitun:AddButton({
+text = "Find Fruits",
+callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/290b11f6d622446241703db34703dea3.lua"))()
 end
 })
 
-Tabs.Kaitun:Button({
-Title="Auto Gạt Cần",
-Callback=function()
-getgenv().Config = {
-    Team = "Pirates",
-    Settings = {
-        ToolFarm = "Melee",
-        HopDelay = 2
-    }
-}
+Kaitun:AddButton({
+text = "Auto Gạt Cần",
+callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/638cb8130072d62781731a34792acec1.lua"))()
 end
 })
 
-Tabs.Kaitun:Button({
-Title="Hop Server",
-Callback=function()
+Kaitun:AddButton({
+text = "Hop Server",
+callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/WhiteX1208/Scripts/refs/heads/main/HopScript.luau"))()
 end
 })
 
 -- PvP
-Tabs.PvP:Button({
-Title="Auto BOUNTY m1 fruit",
-Callback=function()
-getgenv().Config = {
-    Team = "Pirates",
-    HuntConfig = {
-        ["Earned Notification Enabled"] = true,
-        ["Farm Delay"] = 0.22,
-        ["Webhook"] = {
-            Enabled = false,
-            Url = ""
-        }
-    }
-}
+PvP:AddButton({
+text = "Auto Bounty",
+callback = function()
 loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/2ffcdb62773f587bfb9eb0d52bb35b0c.lua"))()
 end
 })
 
-Tabs.PvP:Button({
-Title="Aim POV",
-Callback=function()
-local script_mode = "PVP"
-local loader = loadstring
-local url = "https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/Loader.lua"
-local response = game:HttpGet(url)
-loader(response)()
-end
-})
-
--- Other
-Tabs.Other:Button({
-Title="FixLag",
-Callback=function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/TurboLite/Script/main/FixLag.lua"))()
-end
-})
-
-Tabs.Other:Button({
-Title="Fly",
-Callback=function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-end
-})
-
-WindUI:Notify({
-Title="HGB vn Hub",
-Content="Script đã load thành công!",
-Duration=4
-})
+PvP
