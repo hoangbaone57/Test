@@ -1,0 +1,90 @@
+-- [[ BIẾN ĐIỀU KHIỂN ]]
+getgenv().AutoFarm = false
+getgenv().SelectWeapon = "Melee" -- Mặc định là Đấm
+
+-- [[ HÀM TWEEN (DI CHUYỂN MƯỢT) ]]
+function TweenTo(TargetCFrame)
+    local Character = game.Players.LocalPlayer.Character
+    if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
+    
+    local Distance = (TargetCFrame.p - Character.HumanoidRootPart.Position).Magnitude
+    local Speed = 300 -- Tốc độ bay (nên để từ 200-300 để tránh bị lỗi)
+    
+    local Tween = game:GetService("TweenService"):Create(
+        Character.HumanoidRootPart,
+        TweenInfo.new(Distance / Speed, Enum.EasingStyle.Linear),
+        {CFrame = TargetCFrame}
+    )
+    Tween:Play()
+    return Tween
+end
+
+-- [[ TẠO GIAO DIỆN ]]
+local Tabs = {
+    Main = Window:Tab({Title = "⚔️ Farm"}),
+    Setting = Window:Tab({Title = "⚙️ Cài đặt"})
+}
+
+Tabs.Main:Section({Title = "Chức năng chính"})
+
+-- NÚT BẬT/TẮT AUTO FARM
+Tabs.Main:Toggle({
+    Title = "Auto Farm Level",
+    Default = false,
+    Callback = function(Value)
+        getgenv().AutoFarm = Value
+        if Value then
+            RunAutoFarmLogic()
+        end
+    end
+})
+
+-- CHỌN VŨ KHÍ
+Tabs.Main:Dropdown({
+    Title = "Chọn vũ khí",
+    Multi = false,
+    Options = {"Melee", "Sword", "Fruit"},
+    Default = "Melee",
+    Callback = function(Value)
+        getgenv().SelectWeapon = Value
+    end
+})
+
+-- [[ LOGIC AUTO FARM ]]
+function RunAutoFarmLogic()
+    spawn(function()
+        while getgenv().AutoFarm do
+            task.wait(0.1)
+            pcall(function()
+                local Player = game.Players.LocalPlayer
+                local Character = Player.Character
+                
+                -- 1. Kiểm tra vũ khí và cầm lên
+                for _, tool in pairs(Player.Backpack:GetChildren()) do
+                    if tool.ToolTip == getgenv().SelectWeapon or tool.Name == getgenv().SelectWeapon then
+                        Character.Humanoid:EquipTool(tool)
+                    end
+                end
+
+                -- 2. Logic nhận quest và đánh quái (Mẫu cho quái Bandit)
+                if not Player.PlayerGui.Main.Quest.Visible then
+                    -- Đi tới NPC nhận Quest (Thay CFrame bằng tọa độ NPC game bạn)
+                    -- TweenTo(CFrame.new(1059, 15, 1549)) 
+                else
+                    -- Tìm quái
+                    for _, monster in pairs(game.Workspace.Enemies:GetChildren()) do
+                        if monster.Name == "Bandit" and monster:FindFirstChild("Humanoid") and monster.Humanoid.Health > 0 then
+                            -- Bay tới phía trên đầu quái để đánh cho an toàn
+                            Character.HumanoidRootPart.CFrame = monster.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
+                            
+                            -- Giả lập click đánh
+                            game:GetService("VirtualUser"):CaptureController()
+                            game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
+                            break
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+end
